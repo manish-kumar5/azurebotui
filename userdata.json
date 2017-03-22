@@ -1,0 +1,45 @@
+{
+    "users": [
+        {
+            "userid" : "john",
+            "password": "john",
+            "name": "John",
+            "dob":"11-17-1984",
+            "ssn": "10001234",
+            "address": "123 ABC Dr Urbandale Iowa 12345",
+            "phone": "9876543210",
+            "certno": "000017111984"
+        },
+        {
+            "userid" : "anna",
+            "password": "anna",
+            "name": "Anna",
+            "dob":"12-30-1988",
+            "ssn": "10001414",
+            "address": "191-103 Integer Rd. Corona New Mexico 08219",
+            "phone": "3333333333",
+            "certno": "000012341234"
+        },
+        {
+            "userid" : "paul",
+            "password": "paul",
+            "name": "Paul",
+            "dob":"03-12-1990",
+            "ssn": "10002345",
+            "address": "347-7666 Iaculis St. Woodruff SC 49854",
+            "phone": "1234567890",
+            "certno": "000088888888"
+        },
+        {
+            "userid" : "oliver",
+            "password": "oliver",
+            "name": "Oliver",
+            "dob":"09-12-1991",
+            "ssn": "10005678",
+            "address": "511-5762 At Rd. Chelsea MI 67708",
+            "phone": "2222222222",
+            "certno": "000099999999"
+        }
+    ]
+    
+}
