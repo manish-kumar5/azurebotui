@@ -2,6 +2,7 @@ var Swagger = require('swagger-client');
 var open = require('open');
 var rp = require('request-promise');
 var store = require('./store');
+var timeout = require('connect-timeout');
 var http            = require('http'),
     express         = require('express'),
     session = require('express-session');
@@ -19,6 +20,13 @@ var refreshIntervalId;//, prev_msg_id=0, curr_msg_id=0;
 
 
 var app = express();
+
+app.use(timeout(300000));
+app.use(haltOnTimedout);
+
+function haltOnTimedout(req, res, next){
+  if (!req.timedout) next();
+}
 
 app.use(session({ secret: 'somesecrettokenhere', resave: false,
   saveUninitialized: true, cookie: { maxAge: 1200000 }}))
@@ -85,7 +93,7 @@ webchatRouter.route('/init')
                         watermark = response.obj.watermark;                                 // use watermark so subsequent requests skip old messages 
                         printMessages(response.obj.activities, res);
                     });
-                }, 1000);
+                }, 3000);
             });
     })
 
@@ -140,7 +148,10 @@ webchatRouter.route('/post/:message')
                     watermark = response.obj.watermark;                                 // use watermark so subsequent requests skip old messages 
                     printMessages(response.obj.activities, res);
                 });
-            }, 1000);
+            }, 3000);
+        })
+        .then(function(){
+            //clearInterval(refreshIntervalId);
         })
         .catch(function (err) {
             console.error('Error sending message:', err);
@@ -213,7 +224,7 @@ function printMessages(activities, res) {
                 console.log(response);
                 res.json({data: response});
             //    prev_msg_id = curr_msg_id;
-            //    clearInterval(refreshIntervalId);
+
             //}
         }
     }
