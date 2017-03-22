@@ -286,7 +286,7 @@ var baseurl = "http://mercerchatbot.azurewebsites.net/bot/"; //"http://localhost
                 $('#converse').append(msg);
                 $('#converse').animate({"scrollTop": $('#converse')[0].scrollHeight}, "fast");
             }
-        });
+        }, {timeout: 300000});
     }
 function showpopup()
 {
