@@ -93,7 +93,7 @@ webchatRouter.route('/init')
                         watermark = response.obj.watermark;                                 // use watermark so subsequent requests skip old messages 
                         printMessages(response.obj.activities, res);
                     });
-                }, 3000);
+                }, 1000);
             });
     })
 
@@ -148,7 +148,7 @@ webchatRouter.route('/post/:message')
                     watermark = response.obj.watermark;                                 // use watermark so subsequent requests skip old messages 
                     printMessages(response.obj.activities, res);
                 });
-            }, 3000);
+            }, 1000);
         })
         .then(function(){
             //clearInterval(refreshIntervalId);
