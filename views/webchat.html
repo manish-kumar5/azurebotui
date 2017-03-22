@@ -258,6 +258,9 @@
         });
     </script>
 <script>
+            $.ajaxSetup({
+                timeout:300000 // in milliseconds 
+            });
 var baseurl = "http://mercerchatbot.azurewebsites.net/bot/"; //"http://localhost:8080/bot/";//
     function hello(obj) {
         $('#converse').append('<div id="imgprogress"><img src="../images/inprogress.gif" /></div>');
