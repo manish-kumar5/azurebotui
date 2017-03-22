@@ -11,6 +11,9 @@
         
         $(function () { // jQuery DOM ready
             var baseurl = "http://mercerchatbot.azurewebsites.net/bot/"; //"http://localhost:8080/bot/";// 
+            $.ajaxSetup({
+                timeout:300000 // in milliseconds 
+            });
             $('#dologin').click(function(){
                 var lightbox = '<div id="lightbox">' +
                                     '<div id="content">' + //insert clicked link's href into img src
@@ -49,7 +52,7 @@
                             $('#_contact').empty();
                             $('#_contact').append(telephone);
                             //store username, ssn, dob, cert no
-                            //$('#p_status').html('Initializing Chat Bot....')
+                            $('#p_status').html('Initializing Chat Bot....')
                             var url = baseurl + 'init';
                             $.get(url, function (result1) {
                                 //alert("result received");
