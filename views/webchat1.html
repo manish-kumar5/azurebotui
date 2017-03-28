@@ -8,30 +8,196 @@
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
 
     <script>
-    
         $(function () { // jQuery DOM ready
+            $('#dologin').click(function(){
                 var lightbox = '<div id="lightbox">' +
                                     '<div id="content">' + //insert clicked link's href into img src
-                                        '<p id="p_status">Initializing Chat...</p>' +
+                                        '<p id="p_status">Verifying Credential...</p>' +
                                         '<img src="../images/loading.gif" />'
                                     '</div>' +	
                                 '</div>';
                 $('#progress').empty();
                 $('#progress').append(lightbox);
+                $('#content').html('<img src="../images/progress.gif" />');
                 $('#lightbox').show();
-                postmessage("hello");
+                userid = $('#login').val();
+                password = $('#password').val();
+                var url = 'http://localhost:5001/bot/user/' + userid + '/' + password;
+                $.post( url, function(result ) {
+                    if(result){
+                        if(result.success){
+                            hidepopup();
+                            $('#chat_window_1').css("display", "block");
+                            
+                            var username = result.username;
+                            var ssn = result.ssn;
+                            var dob = result.dob;
+                            var cert = result.cert;
+                            var telephone = result.telephone;
+                            var address = result.address;
 
+                            $('#_name').empty();
+                            $('#_name').append(username);
+                            $('#_ssn').empty();
+                            $('#_ssn').append(ssn);
+                            $('#_cert').empty();
+                            $('#_cert').append(cert);
+                            $('#_dob').empty();
+                            $('#_dob').append(dob);
+                            $('#_contact').empty();
+                            $('#_contact').append(telephone);
+                            //store username, ssn, dob, cert no
+                            //$('#p_status').html('Initializing Chat Bot....')
+                            var url = 'http://localhost:5001/bot/init';
+                            $.get(url, function (result1) {
+                                //alert("result received");
+                                if (result1 && (result1.data != "undefined")) {
+                                    var msg = `<div class="row msg_container base_receive">
+                                                <div class="col-md-2 col-xs-2 avatar">
+                                                        <img style="height:40px;width:40px;" src="../images/ben.png" class=" img-responsive "/>
+                                                </div>
+                                                <div class="col-md-10 col-xs-10">
+                                                    <div class="messages msg_receive">
+                                                        <p>`;
+
+                                    msg += '<h4>' + getTimeString() ;
+                                    if(username){
+                                        msg += ', ' + username + '</h4>';
+                                    }
+                                    msg += result1.data; 
+                                    msg += `</p>
+                                                        <time datetime="2009-11-13T20:00">BEN at `
+                                    msg += new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds();
+                                    msg += `</time>
+                                                    </div>
+                                                </div>
+                                            </div>`
+                                    //alert(msg);
+                                    $('#converse').append(msg);
+                                    $('#converse').animate({"scrollTop": $('#converse')[0].scrollHeight}, "fast");
+                                    // post user context
+                                    $('#p_status').html('Updating User Context...')
+                                    var post_message = '{"username": "' + username + '", "ssn": "' + ssn + '", "dob": "' + dob + '", "address": "' + address + '", "telephone": "' + telephone + '", "cert": "' + cert + '"}';
+                                    var url = 'http://localhost:5001/bot/post/' + post_message;
+                                    $.get(url, function (result2) {
+                                        if(result2){
+                                            var res = result2.data;
+                                            //alert(res);
+                                            $('#lightbox').hide();
+                                        }
+                                    });
+                                }
+                            });
+
+                        }
+                        else
+                        {
+                            $('#lblmsg').empty();
+                            $('#lblmsg').append('Invalid userid/ password');
+                        }
+                    }
+                });
+                
+
+            });
+
+            $("#show_login").click(function(){
+                showpopup();
+            });
+            $("#show_login_1").click(function(){
+                showpopup();
+            });
+            $("#close_login").click(function(){
+                hidepopup();
+            });
+                        //firstLoad();
+            /*$('#startchat').click(function(){
+                
+                //alert('hello');
+                //alert($('#chat_window_1').css.display);
+                $('#chat_window_1').css("display", "block");
+                //firstLoad();
+            });*/
             
+            $('#newconverse').click(function(){
+                 var url = 'http://localhost:5001/bot/init';
+                $.get(url, function (result) {
+                    
+                });
+
+                $('#converse').empty();
+                //var posturl = 'http://localhost:5001/bot/post/new conversation';
+                //$.get(posturl, function (result) {
+                var msg = `<div class="row msg_container base_receive">
+                                        <div class="col-md-2 col-xs-2 avatar">
+                                                <img style="height:40px;width:40px;" src="../images/ben.png" class=" img-responsive "/>
+                                        </div>
+                                        <div class="col-md-10 col-xs-10">
+                                            <div class="messages msg_receive">
+                                                <p>Please choose from below options or type your question in the input box<br>
+                    <input type="button" onclick="hello(this)" value="Policy Query" id="Policy Query"><br>
+                    <input type="button" onclick="hello(this)" value="Payment Query" id="Payment Query"><br>
+                    <input type="button" onclick="hello(this)" value="Website Issue" id="Website Issue"></p>`
+                    //msg = result.data;                    
+                    msg += '<time datetime="2009-11-13T20:00">BEN at'  + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds();
+                    msg += `</time>
+                                    </div>
+                                </div>
+                            </div>`;
+                    
+                    $('#converse').append(msg);
+                    $('#converse').animate({"scrollTop": $('#converse')[0].scrollHeight}, "fast");
+                   
+                //});
+
+                
+                
+                
+            });
             $('#txtmessage').bind("enterKey", function (e) {
                 var text = $('#txtmessage').val();
-                // Post Message
-                postmessage(text);
-
-                var appendhtml = '<div class="row msg_container base_sent"><div class="col-md-10 col-xs-10"><div class="messages msg_sent"><p>';
+                var url = 'http://localhost:5001/bot/post/' + text;
+                
+                $.get(url, function (result) {
+                    if (result && (result.data != "undefined")) {
+                        //$('#converse').append('<table border="0"><tr><td><img style="height:60px;width:60px;" src="http://mercertestbot.azurewebsites.net/images/chatbot.jpg"/> </td> <td>' + result.data + '</td></tr></table>');
+                        var msg = `<div class="row msg_container base_receive">
+                                    <div class="col-md-2 col-xs-2 avatar">
+                                            <img style="height:40px;width:40px;" src="../images/ben.png" class=" img-responsive "/>
+                                    </div>
+                                    <div class="col-md-10 col-xs-10">
+                                        <div class="messages msg_receive">
+                                            <p>`;
+                        msg += result.data; 
+                        msg += `</p>
+                                            <time datetime="2009-11-13T20:00">BEN at `
+                        msg += new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds();
+                        msg += `</time>
+                                        </div>
+                                    </div>
+                                </div>`
+                        $('#imgprogress').remove();
+                        $('#converse').append(msg);
+                        
+                        $('#converse').animate({"scrollTop": $('#converse')[0].scrollHeight}, "fast");
+                        
+                    }
+                });
+                var appendhtml = `<div class="row msg_container base_sent">
+                                    <div class="col-md-10 col-xs-10">
+                                        <div class="messages msg_sent">
+                                            <p>`;
                 appendhtml += text;
-                appendhtml += '</p><time datetime="2009-11-13T20:00"> You at';
+                appendhtml += `</p>
+                                            <time datetime="2009-11-13T20:00"> You at`;
                 appendhtml += new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds();
-                appendhtml += '</time></div></div><div class="col-md-2 col-xs-2 avatar"><img style="height:40px;width:40px;" src="../images/you.png" class=" img-responsive "/></div></div>';
+                appendhtml += `</time>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-xs-2 avatar">
+                                        <img style="height:40px;width:40px;" src="../images/you.png" class=" img-responsive "/>
+                                    </div>
+                                </div>`;
                 $('#converse').append(appendhtml);
                 $('#converse').append('<div id="imgprogress"><img src="../images/inprogress.gif" /></div>');
                 $('#converse').animate({"scrollTop": $('#converse')[0].scrollHeight}, "fast");
@@ -85,52 +251,35 @@
             //$('.msg_container_base').scroll($('.msg_container_base')[0].scrollHeight);
 
         });
-
-    var baseurl = "http://localhost:5001/bot";
-    function postmessage(msg){
-        var url = baseurl + '/post/' + msg;
-                
-                $.get(url, function (result) {
-                    if (result && (result.data != "undefined")) {
-                        //$('#converse').append('<table border="0"><tr><td><img style="height:60px;width:60px;" src="http://mercertestbot.azurewebsites.net/images/chatbot.jpg"/> </td> <td>' + result.data + '</td></tr></table>');
-                        var msg = '<div class="row msg_container base_receive">';
-                        msg += '            <div class="col-md-2 col-xs-2 avatar">';
-                         msg += '                    <img style="height:40px;width:40px;" src="../images/ben.png" class=" img-responsive "/>';
-                        msg +='  </div> <div class="col-md-10 col-xs-10"> <div class="messages msg_receive"> <p>';
-                        msg += result.data; 
-                        msg += '</p><time datetime="2009-11-13T20:00">BEN at ';
-                        msg += new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds();
-                        msg += '</time> </div> </div></div>';
-                        $('#imgprogress').remove();
-                        $('#converse').append(msg);
-                        $('#lightbox').hide();
-                        $('#converse').animate({"scrollTop": $('#converse')[0].scrollHeight}, "fast");
-                        
-                    }
-                });
-                
-    }
+    </script>
+<script>
     function hello(obj) {
         $('#converse').append('<div id="imgprogress"><img src="../images/inprogress.gif" /></div>');
         $('#converse').animate({"scrollTop": $('#converse')[0].scrollHeight}, "fast");
-        postmessage(obj.id);
-    }
-    function getTimeString(){
-        var data = [
-            [0, 4, "Good evening!!"], 
-            [5, 11, "Good morning!!"],          //Store messages in an array
-            [12, 17, "Good afternoon!!"],
-            [18, 24, "Good evening!!"]
-        ],
-        hr = new Date().getHours();
-        for(var i = 0; i < data.length; i++){
-            if(hr >= data[i][0] && hr <= data[i][1]){
-                return data[i][2];
-                break;
+        var url = 'http://localhost:5001/bot/post/' + obj.id;
+        $.get(url, function (result) {
+            if (result && (result.data != "undefined")) {
+                var msg = `<div class="row msg_container base_receive">
+                            <div class="col-md-2 col-xs-2 avatar">
+                                    <img style="height:40px;width:40px;" src="../images/ben.png" class=" img-responsive "/>
+                            </div>
+                            <div class="col-md-10 col-xs-10">
+                                <div class="messages msg_receive">
+                                    <p>`;
+                msg += result.data; 
+                msg += `</p>
+                                    <time datetime="2009-11-13T20:00">BEN at`
+                msg += new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds();
+                msg += `</time> </div>
+                            </div>
+                        </div>`
+                $('#imgprogress').remove();
+                $('#converse').append(msg);
+                $('#converse').animate({"scrollTop": $('#converse')[0].scrollHeight}, "fast");
             }
-        }
+        });
     }
-/*function showpopup()
+function showpopup()
 {
  $("#loginform").fadeIn();
  $("#loginform").css({"visibility":"visible","display":"block"});
@@ -143,7 +292,7 @@ function hidepopup()
 }
 
     function firstLoad(){
-        var url = baseurl + '/init';
+        var url = 'http://localhost:5001/bot/init';
         $.get(url, function (result) {
             if (result && (result.data != "undefined")) {
                 var msg = `<div class="row msg_container base_receive">
@@ -171,8 +320,22 @@ function hidepopup()
             }
         });
     }
-*/
 
+    function getTimeString(){
+        var data = [
+                [0, 4, "Good evening!!"], 
+                [5, 11, "Good morning!!"],          //Store messages in an array
+                [12, 17, "Good afternoon!!"],
+                [18, 24, "Good evening!!"]
+            ],
+            hr = new Date().getHours();
+            for(var i = 0; i < data.length; i++){
+                if(hr >= data[i][0] && hr <= data[i][1]){
+                    return data[i][2];
+                    break;
+                }
+            }
+    }
 
 
 </script>
@@ -256,7 +419,7 @@ function hidepopup()
 			</div>
 		</div>
 
-        <div  class="row chat-window col-xs-5 col-md-3" id="chat_window_1" style="margin-bottom:200px;margin-left:10px;">
+        <div  class="row chat-window col-xs-5 col-md-3" id="chat_window_1" style="margin-bottom:200px;margin-left:10px;display:none;">
             <div class="col-xs-12 col-md-12">
                 <div class="panel panel-default">
                     <div class="panel-heading top-bar">
