@@ -8,19 +8,20 @@
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
 
     <script>
-
+    
         $(function () { // jQuery DOM ready
-            var lightbox = '<div id="lightbox">' +
-                                '<div id="content">' + //insert clicked link's href into img src
-                                    '<p id="p_status">Initializing Chat...</p>' +
-                                    '<img src="../images/loading.gif" />'
-            '</div>' +
-        '</div>';
-            $('#progress').empty();
-            $('#progress').append(lightbox);
-            $('#lightbox').show();
-            postmessage("hello");
+                var lightbox = '<div id="lightbox">' +
+                                    '<div id="content">' + //insert clicked link's href into img src
+                                        '<p id="p_status">Initializing Chat...</p>' +
+                                        '<img src="../images/loading.gif" />'
+                                    '</div>' +	
+                                '</div>';
+                $('#progress').empty();
+                $('#progress').append(lightbox);
+                $('#lightbox').show();
+                postmessage("hello");
 
+            
             $('#txtmessage').bind("enterKey", function (e) {
                 var text = $('#txtmessage').val();
                 // Post Message
@@ -32,8 +33,8 @@
                 appendhtml += new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds();
                 appendhtml += '</time></div></div><div class="col-md-2 col-xs-2 avatar"><img style="height:40px;width:40px;" src="../images/you.png" class=" img-responsive "/></div></div>';
                 $('#converse').append(appendhtml);
-                $('#converse').append('<div id="imgprogress"><img src="../images/inprogress.gif" width="50px" height="50px" /></div>');
-                $('#converse').animate({ "scrollTop": $('#converse')[0].scrollHeight }, "fast");
+                $('#converse').append('<div id="imgprogress"><img src="../images/inprogress.gif" /></div>');
+                $('#converse').animate({"scrollTop": $('#converse')[0].scrollHeight}, "fast");
 
                 $('#txtmessage').val("");
             });
@@ -76,7 +77,7 @@
                 $("#imgchat").css("display", "block");
             });
 
-            $('#imgchat').click(function () {
+            $('#imgchat').click(function(){
                 $("#chat_window_1").css("display", "block");
                 $("#imgchat").css("display", "none");
             })
@@ -85,130 +86,96 @@
 
         });
 
-        var baseurl = "http://localhost:5001/bot";
-        function postmessage(msg) {
-            var url = baseurl + '/post/' + msg;
-
-            $.get(url, function (result) {
-                if (result && (result.data != "undefined")) {
-                    //$('#converse').append('<table border="0"><tr><td><img style="height:60px;width:60px;" src="http://mercertestbot.azurewebsites.net/images/chatbot.jpg"/> </td> <td>' + result.data + '</td></tr></table>');
-                    var msg = '<div class="row msg_container base_receive">';
-                    msg += '            <div class="col-md-2 col-xs-2 avatar">';
-                    msg += '                    <img style="height:40px;width:40px;" src="../images/ben.png" class=" img-responsive "/>';
-                    msg += '  </div> <div class="col-md-10 col-xs-10"> <div class="messages msg_receive"> <p>';
-                    msg += result.data;
-                    msg += '</p><time datetime="2009-11-13T20:00">BEN at ';
-                    msg += new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds();
-                    msg += '</time> </div> </div></div>';
-                    $('#imgprogress').remove();
-                    $('#converse').append(msg);
-                    $('#lightbox').hide();
-                    $('#converse').animate({ "scrollTop": $('#converse')[0].scrollHeight }, "fast");
-
-                }
-            });
-
-        }
-        function hello(obj) {
-            $('#converse').append('<div id="imgprogress"><img src="../images/inprogress.gif" /></div>');
-            $('#converse').animate({ "scrollTop": $('#converse')[0].scrollHeight }, "fast");
-            postmessage(obj.id);
-        }
-        function getTimeString() {
-            var data = [
-                [0, 4, "Good evening!!"],
-                [5, 11, "Good morning!!"],          //Store messages in an array
-                [12, 17, "Good afternoon!!"],
-                [18, 24, "Good evening!!"]
-            ],
-            hr = new Date().getHours();
-            for (var i = 0; i < data.length; i++) {
-                if (hr >= data[i][0] && hr <= data[i][1]) {
-                    return data[i][2];
-                    break;
-                }
-            }
-        }
-
-        function submitUserInput() {
-            //var url = baseurl + '/user/' + $("#uid").val() + '/' + $("#certno").val() + '/' + $("#dob").val() + '/' + $("#addr").val() + '/' + $("#tele").val() + '/' + $("#ssn").val();
-            var url = baseurl + '/user/' + $("#uid").val() + '/' + $("#certno").val() + '/' + $("#dob").val() + '/' + $("#tele").val() + '/' + $("#ssn").val();
-
-            $.post(url, function (result) {
-                if (result.success) {
-                    var response = {
-                        username: $("#uid").val(),
-                        certno: $("#certno").val(),
-                        dob: $("#dob").val(),
-                        ssn: $("#ssn").val(),
-                        //address: $("#addr").val(),
-                        telephone: $("#tele").val()
-                    };
-
-                    postmessage(response);
-                }
-                else {
-                    $('#lblmsg').empty();
-                    $('#lblmsg').append('Invalid userid / password');
-                }
-            });
-        }
-
-        function cancelUserInput() {
-            $("#uid").empty();
-            $("#certno").empty();
-            $("#dob").empty();
-            //$("#addr").empty();
-            $("#tele").empty();
-            $("#ssn").empty();
-        }
-
-        /*function showpopup()
-        {
-         $("#loginform").fadeIn();
-         $("#loginform").css({"visibility":"visible","display":"block"});
-        }
-
-        function hidepopup()
-        {
-         $("#loginform").fadeOut();
-         $("#loginform").css({"visibility":"hidden","display":"none"});
-        }
-
-            function firstLoad(){
-                var url = baseurl + '/init';
+    var baseurl = "http://localhost:5001/bot";
+    function postmessage(msg){
+        var url = baseurl + '/post/' + msg;
+                
                 $.get(url, function (result) {
                     if (result && (result.data != "undefined")) {
-                        var msg = `<div class="row msg_container base_receive">
-                                    <div class="col-md-2 col-xs-2 avatar">
-                                            <img style="height:40px;width:40px;" src="../images/ben.png" class=" img-responsive "/>
-                                    </div>
-                                    <div class="col-md-10 col-xs-10">
-                                        <div class="messages msg_receive">
-                                            <p>`;
-
-                        msg += '<h4>' + getTimeString() + '</h4>';
-                        if(result.user){
-                            msg += ', <b>' + result.user + '</b>';
-                        }
-                        msg += '. ' +  result.data;
-                        msg += `</p>
-                                            <time datetime="2009-11-13T20:00">BEN at `
+                        //$('#converse').append('<table border="0"><tr><td><img style="height:60px;width:60px;" src="http://mercertestbot.azurewebsites.net/images/chatbot.jpg"/> </td> <td>' + result.data + '</td></tr></table>');
+                        var msg = '<div class="row msg_container base_receive">';
+                        msg += '            <div class="col-md-2 col-xs-2 avatar">';
+                         msg += '                    <img style="height:40px;width:40px;" src="../images/ben.png" class=" img-responsive "/>';
+                        msg +='  </div> <div class="col-md-10 col-xs-10"> <div class="messages msg_receive"> <p>';
+                        msg += result.data; 
+                        msg += '</p><time datetime="2009-11-13T20:00">BEN at ';
                         msg += new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds();
-                        msg += `</time>
-                                        </div>
-                                    </div>
-                                </div>`
+                        msg += '</time> </div> </div></div>';
+                        $('#imgprogress').remove();
                         $('#converse').append(msg);
+                        $('#lightbox').hide();
                         $('#converse').animate({"scrollTop": $('#converse')[0].scrollHeight}, "fast");
+                        
                     }
                 });
+                
+    }
+    function hello(obj) {
+        $('#converse').append('<div id="imgprogress"><img src="../images/inprogress.gif" /></div>');
+        $('#converse').animate({"scrollTop": $('#converse')[0].scrollHeight}, "fast");
+        postmessage(obj.id);
+    }
+    function getTimeString(){
+        var data = [
+            [0, 4, "Good evening!!"], 
+            [5, 11, "Good morning!!"],          //Store messages in an array
+            [12, 17, "Good afternoon!!"],
+            [18, 24, "Good evening!!"]
+        ],
+        hr = new Date().getHours();
+        for(var i = 0; i < data.length; i++){
+            if(hr >= data[i][0] && hr <= data[i][1]){
+                return data[i][2];
+                break;
             }
-        */
+        }
+    }
+/*function showpopup()
+{
+ $("#loginform").fadeIn();
+ $("#loginform").css({"visibility":"visible","display":"block"});
+}
+
+function hidepopup()
+{
+ $("#loginform").fadeOut();
+ $("#loginform").css({"visibility":"hidden","display":"none"});
+}
+
+    function firstLoad(){
+        var url = baseurl + '/init';
+        $.get(url, function (result) {
+            if (result && (result.data != "undefined")) {
+                var msg = `<div class="row msg_container base_receive">
+                            <div class="col-md-2 col-xs-2 avatar">
+                                    <img style="height:40px;width:40px;" src="../images/ben.png" class=" img-responsive "/>
+                            </div>
+                            <div class="col-md-10 col-xs-10">
+                                <div class="messages msg_receive">
+                                    <p>`;
+
+                msg += '<h4>' + getTimeString() + '</h4>';
+                if(result.user){
+                    msg += ', <b>' + result.user + '</b>';
+                }
+                msg += '. ' +  result.data; 
+                msg += `</p>
+                                    <time datetime="2009-11-13T20:00">BEN at `
+                msg += new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds();
+                msg += `</time>
+                                </div>
+                            </div>
+                        </div>`
+                $('#converse').append(msg);
+                $('#converse').animate({"scrollTop": $('#converse')[0].scrollHeight}, "fast");
+            }
+        });
+    }
+*/
 
 
 
-    </script>
+</script>
 </head>
 
 
@@ -220,76 +187,76 @@
             <nav class="topNav fixed">
                 <section class="topNavContent">
                     <p>MERCER OS<sup>&reg;</sup></p>
-                    <!--<h2><a href="#" id="show_login"><p style="font-size:15;"><b>Login</b></p></a></h2>-->
+                    <h2><a href="#" id="show_login"><p style="font-size:15;"><b>Login</b></p></a></h2>
                 </section>
             </nav>
         </header>
-
+        
         <div class="osContentChatSection">
-
-            <div class="osContentChatBoxDetails">
-                <div class="osContentDetailsLeft">
-                    <div class="osContentLogoHeader">
-                        <img class="osContentLogoHeader-logo" id="benHeader" src="../images/header-logo.jpg" />
-                        <hr class="osContentLogoHeader-hr"></hr>
-                        <div class="osContentLogoHeader-text">MERCER</div>
-                        <div class="osContentLogoHeader-subtext">Artificial Intelligence</div>
-                    </div>
-                    <div class="osContentLogoHeader-header">Hello, my name is Ben. I am an AI customer assistant.</div>
-                    <div class="osContentLogoHeader-headerText">I can handle conversations about the following topics:</div>
-                    <div class="osContentLogoHeader-logos">
-                        <div class="osContentLogoHeader-logo osContentLogoHeader-logo-tracking">
-                            <img class="osContentLogoHeader-logo-icon" src="../images/policy-icon.png" />Policy Query
-                        </div>
-                        <div class="osContentLogoHeader-logo osContentLogoHeader-logo-returns">
-                            <img class="osContentLogoHeader-logo-icon" src="../images/payment-logo.png" />Making a payment
-                        </div>
-                        <!--<div class="osContentLogoHeader-logo osContentLogoHeader-logo-cancellations">
-                            <img class="osContentLogoHeader-logo-icon" src="../images/login-icon.png" />Login help
-                        </div>-->
-                    </div>
-                    <div class="osContentLogoHeader-headerText">To use chatbot you will have to login so that your identify gets confirmed.</div>
-                    <!--<div class="osContentLogoHeader-headerText">Click <a href="#" id="show_login_1" ><b>Login</b></a> to start login process if you are registered user else <a href="#" id=""><b> Register now</b></a></div>-->
-                    <div class="osContentLogoHeader-customerCard">
-                        <div class="osContentLogoHeader-customerCard-card">
-                            <div class="osContentLogoHeader-customerCardLeft">
+            
+			<div class="osContentChatBoxDetails">
+				<div class="osContentDetailsLeft">
+					<div class="osContentLogoHeader">
+						<img class="osContentLogoHeader-logo" id="benHeader" src="../images/header-logo.jpg"/>
+						<hr class="osContentLogoHeader-hr"></hr>
+						<div class="osContentLogoHeader-text">MERCER</div>
+						<div class="osContentLogoHeader-subtext">Artificial Intelligence</div>
+					</div>
+					<div class="osContentLogoHeader-header">Hello, my name is Ben. I am an AI customer assistant.</div>
+					<div class="osContentLogoHeader-headerText">I can handle conversations about the following topics:</div>
+					<div class="osContentLogoHeader-logos">
+						<div class="osContentLogoHeader-logo osContentLogoHeader-logo-tracking">
+							<img class="osContentLogoHeader-logo-icon" src="../images/policy-icon.png" />Policy Query
+						</div>
+						<div class="osContentLogoHeader-logo osContentLogoHeader-logo-returns">
+							<img class="osContentLogoHeader-logo-icon" src="../images/payment-logo.png" />Making a payment
+						</div>
+						<div class="osContentLogoHeader-logo osContentLogoHeader-logo-cancellations">
+							<img class="osContentLogoHeader-logo-icon" src="../images/login-icon.png" />Login help
+						</div>
+					</div>
+					<div class="osContentLogoHeader-headerText">To use chatbot you will have to login so that your identify gets confirmed.</div>
+                    <div class="osContentLogoHeader-headerText">Click <a href="#" id="show_login_1" ><b>Login</b></a> to start login process if you are registered user else <a href="#" id=""><b> Register now</b></a></div>
+					<div class="osContentLogoHeader-customerCard">
+						<div class="osContentLogoHeader-customerCard-card">
+							<div class="osContentLogoHeader-customerCardLeft">
                                 <img class="osContentLogoHeader-customerCard-id" src="../images/customer-profile.png" /><br> <center><span id="_name">User Name</span></center>
-                            </div>
-                            <div class="osContentLogoHeader-customerCardRight">
-                                <div class="osContentLogoHeader-customerCard-card-section">
-                                    <div class="osContentLogoHeader-customerCard-card-header osContentLogoHeader-customerCard-card-name">SSN: <span id="_ssn" class="osContentLogoHeader-customerCard-card-value osContentLogoHeader-customerCard-card-name"></span></div>
-                                </div>
-                                <div class="osContentLogoHeader-customerCard-card-section">
-                                    <div class="osContentLogoHeader-customerCard-card-header osContentLogoHeader-customerCard-card-email">Cert No: <span id="_cert" class="osContentLogoHeader-customerCard-card-value osContentLogoHeader-customerCard-card-email"></span></div>
-                                </div>
-                                <div class="osContentLogoHeader-customerCard-card-section">
-                                    <div class="osContentLogoHeader-customerCard-card-header osContentLogoHeader-customerCard-card-email">Contact No: <span id="_contact" class="osContentLogoHeader-customerCard-card-value osContentLogoHeader-customerCard-card-email"></span></div>
-                                </div>
-                                <div class="osContentLogoHeader-customerCard-card-section">
-                                    <div class="osContentLogoHeader-customerCard-card-header osContentLogoHeader-customerCard-card-email">Date Of Birth: <span id="_dob" class="osContentLogoHeader-customerCard-card-value osContentLogoHeader-customerCard-card-email"></span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+							</div>
+							<div class="osContentLogoHeader-customerCardRight">
+							<div class="osContentLogoHeader-customerCard-card-section">
+								<div class="osContentLogoHeader-customerCard-card-header osContentLogoHeader-customerCard-card-name">SSN: <span id="_ssn" class="osContentLogoHeader-customerCard-card-value osContentLogoHeader-customerCard-card-name"></span></div>
+							</div>
+							<div class="osContentLogoHeader-customerCard-card-section">
+								<div class="osContentLogoHeader-customerCard-card-header osContentLogoHeader-customerCard-card-email">Cert No: <span id="_cert" class="osContentLogoHeader-customerCard-card-value osContentLogoHeader-customerCard-card-email"></span></div>
+							</div>
+                            <div class="osContentLogoHeader-customerCard-card-section">
+								<div class="osContentLogoHeader-customerCard-card-header osContentLogoHeader-customerCard-card-email">Contact No: <span id="_contact" class="osContentLogoHeader-customerCard-card-value osContentLogoHeader-customerCard-card-email"></span></div>
+							</div>
+                            <div class="osContentLogoHeader-customerCard-card-section">
+								<div class="osContentLogoHeader-customerCard-card-header osContentLogoHeader-customerCard-card-email">Date Of Birth: <span id="_dob" class="osContentLogoHeader-customerCard-card-value osContentLogoHeader-customerCard-card-email"></span></div>
+							</div>
+							</div>
+						</div>
+					</div>
                     <center>
-                        <div id="loginform">
-
-                            <input type="image" id="close_login" src="../images/close.png">
-                            <input type="text" id="login" placeholder="User Id" name="uid">
-                            <input type="password" id="password" name="upass" placeholder="***">
-                            <input type="button" id="dologin" value="Login">
+                        <div id = "loginform">
+                        
+                            <input type = "image" id = "close_login" src = "../images/close.png">
+                            <input type = "text" id = "login" placeholder = "User Id" name = "uid">
+                            <input type = "password" id = "password" name = "upass" placeholder = "***">
+                            <input type = "button" id = "dologin" value = "Login">
                             <div id="lblmsg"></div>
                         </div>
                     </center>
-                    <!--<div class="osContentLogoFooter">copyright Eloquent Labs, 2017</div>-->
-                </div>
-                <div class="osContentDetailsRight">
-                    <img class="osContentLogoHeader-chatbot" id="imgchat" style="display:none;" src="../images/logo_chat.png" />
-                </div>
-            </div>
-        </div>
+					<!--<div class="osContentLogoFooter">copyright Eloquent Labs, 2017</div>-->
+				</div>
+				<div class="osContentDetailsRight">
+					<img class="osContentLogoHeader-chatbot" id="imgchat" style="display:none;" src="../images/logo_chat.png" />
+				</div>
+			</div>
+		</div>
 
-        <div class="row chat-window col-xs-5 col-md-3" id="chat_window_1" style="margin-bottom:200px;margin-left:10px;">
+        <div  class="row chat-window col-xs-5 col-md-3" id="chat_window_1" style="margin-bottom:200px;margin-left:10px;">
             <div class="col-xs-12 col-md-12">
                 <div class="panel panel-default">
                     <div class="panel-heading top-bar">
@@ -297,9 +264,9 @@
                             <h3 class="panel-title"><span class="glyphicon glyphicon-comment"></span> Chat - Ben</h3>
                             <!--<div style="text-align: right"> <button id="newconverse">New Coversation</button></div>-->
                         </div>
-
+                        
                         <div class="col-md-4 col-xs-4" style="text-align: right;">
-
+                            
                             <a href="#"><span id="minim_chat_window" class="glyphicon glyphicon-minus icon_minim"></span></a>
                             <a href="#"><span class="glyphicon glyphicon-remove icon_close" data-id="chat_window_1"></span></a>
                         </div>
@@ -310,7 +277,7 @@
                         <div class="input-group">
                             <input id="txtmessage" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." />
                             <span class="input-group-btn">
-                                <button class="btn btn-primary btn-sm" id="btn-chat">Send</button>
+                                            <button class="btn btn-primary btn-sm" id="btn-chat">Send</button>
                             </span>
                         </div>
                     </div>
@@ -319,17 +286,17 @@
         </div>
         <div id="progress">
         </div>
-
-        <footer class="osFooter">
-            <div class="osFooterBckgrd"></div>
-            <div class="osFooterContent">
-                <div class="osFooterLogo">
-                    <img src="../images/mercer_login_footer_logo.png" alt="Mercer" />
-                </div>
-                <div class="osFooterCopyright">
-                    <p>© 2017 Mercer LLC, All Rights Reserved</p>
-                </div>
-            </div>
-        </footer>
+        
+<footer class="osFooter">
+    <div class="osFooterBckgrd"></div>
+    <div class="osFooterContent">
+        <div class="osFooterLogo">
+            <img src="../images/mercer_login_footer_logo.png" alt="Mercer" />
+        </div>
+        <div class="osFooterCopyright">
+            <p>© 2017 Mercer LLC, All Rights Reserved</p>
+        </div>
     </div>
+</footer>
+</div>
 </body>
