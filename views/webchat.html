@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="../css/login_style.css" />
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script>
 
         $(function () { // jQuery DOM ready
@@ -132,87 +133,44 @@
 
         function submitUserInput() {
             //var url = baseurl + '/user/' + $("#uid").val() + '/' + $("#certno").val() + '/' + $("#dob").val() + '/' + $("#addr").val() + '/' + $("#tele").val() + '/' + $("#ssn").val();
-            var url = baseurl + '/user/' + $("#uid").val() + '/' + $("#certno").val() + '/' + $("#dob").val() + '/' + $("#tele").val() + '/' + $("#ssn").val();
+            var url = baseurl + '/userdetails';
 
-            $.post(url, function (result) {
-                if (result.success) {
-                    var response = {
-                        username: $("#uid").val(),
-                        certno: $("#certno").val(),
-                        dob: $("#dob").val(),
-                        ssn: $("#ssn").val(),
-                        //address: $("#addr").val(),
-                        telephone: $("#tele").val()
-                    };
+            var formData = {
+                username: $("#uid").val(),
+                certno: $("#certno").val(),
+                dob: $("#dob").val(),
+                ssn: $("#ssn").val(),
+                //address: $("#addr").val(),
+                telephone: $("#tele").val()
+            };
 
-                    postmessage(response);
-                }
-                else {
-                    $('#lblmsg').empty();
-                    $('#lblmsg').append('Invalid userid / password');
-                }
-            });
+            console.log('submitUserInput->Data:' + formData);
+
+            $.post(url,
+                   formData,
+                   function (result) {
+                       if (result.success) {
+                           console.log('submitUserInput->Result:' + result);
+                           postmessage(formData);
+                       }
+                       else {
+                           $('#lblmsg').empty();
+                           $('#lblmsg').append('Invalid user details');
+                       }
+                   }
+            );
         }
 
-        function cancelUserInput() {
-            $("#uid").empty();
-            $("#certno").empty();
-            $("#dob").empty();
-            //$("#addr").empty();
-            $("#tele").empty();
-            $("#ssn").empty();
+        function clearUserInput() {
+            $("#uid").val('');
+            $("#certno").val('');
+            $("#dob").val('');
+            //$("#addr").val('');
+            $("#tele").val('');
+            $("#ssn").val('');
         }
-
-        /*function showpopup()
-        {
-         $("#loginform").fadeIn();
-         $("#loginform").css({"visibility":"visible","display":"block"});
-        }
-
-        function hidepopup()
-        {
-         $("#loginform").fadeOut();
-         $("#loginform").css({"visibility":"hidden","display":"none"});
-        }
-
-            function firstLoad(){
-                var url = baseurl + '/init';
-                $.get(url, function (result) {
-                    if (result && (result.data != "undefined")) {
-                        var msg = `<div class="row msg_container base_receive">
-                                    <div class="col-md-2 col-xs-2 avatar">
-                                            <img style="height:40px;width:40px;" src="../images/ben.png" class=" img-responsive "/>
-                                    </div>
-                                    <div class="col-md-10 col-xs-10">
-                                        <div class="messages msg_receive">
-                                            <p>`;
-
-                        msg += '<h4>' + getTimeString() + '</h4>';
-                        if(result.user){
-                            msg += ', <b>' + result.user + '</b>';
-                        }
-                        msg += '. ' +  result.data;
-                        msg += `</p>
-                                            <time datetime="2009-11-13T20:00">BEN at `
-                        msg += new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds();
-                        msg += `</time>
-                                        </div>
-                                    </div>
-                                </div>`
-                        $('#converse').append(msg);
-                        $('#converse').animate({"scrollTop": $('#converse')[0].scrollHeight}, "fast");
-                    }
-                });
-            }
-        */
-
-
-
     </script>
 </head>
-
-
-
 
 <body class="osLogin">
     <div>
@@ -273,7 +231,6 @@
                     </div>
                     <center>
                         <div id="loginform">
-
                             <input type="image" id="close_login" src="../images/close.png">
                             <input type="text" id="login" placeholder="User Id" name="uid">
                             <input type="password" id="password" name="upass" placeholder="***">

@@ -42,10 +42,10 @@ webchatRouter.route('/user/:userid/:pwd')
 });
 
 // webchatRouter.route('/user/:userid/:certno/:dob/:addr/:tele/:ssn')
-webchatRouter.route('/user/:userid/:certno/:dob/:tele/:ssn')
+webchatRouter.route('/userdetails/:username/:certno/:dob/:telephone/:ssn')
 .post(function (req, res) {
     var sess = req.session;
-    var userid = req.params.userid;
+    var userid = req.params.username;
 
     var isValidSsn = false;
 
@@ -61,7 +61,7 @@ webchatRouter.route('/user/:userid/:certno/:dob/:tele/:ssn')
 
         if (isValidSsn && user.dob === req.params.dob &&
             // user.address === req.params.addr &&
-            user.phone === req.params.tele &&
+            user.phone === req.params.telephone &&
             user.certno === req.params.certno)
             //&& user.ssn === req.params.ssn)
 
