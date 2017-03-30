@@ -1,7 +1,8 @@
+<!DOCTYPE html>
 <html>
-<Title>Mercer BOT POC </Title>
-
 <head>
+    <title>Mercer BOT POC </title>
+
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/sample.css" />
     <link rel="stylesheet" type="text/css" href="../css/login_style.css" />
@@ -132,26 +133,30 @@
         }
 
         function submitUserInput() {
-            //var url = baseurl + '/user/' + $("#uid").val() + '/' + $("#certno").val() + '/' + $("#dob").val() + '/' + $("#addr").val() + '/' + $("#tele").val() + '/' + $("#ssn").val();
-            var url = baseurl + '/userdetails';
+            //var url = baseurl + '/userdetails/' + $("#uid").val() + '/' + $("#certno").val() + '/' + $("#dob").val() + '/' + $("#addr").val() + '/' + $("#tele").val() + '/' + $("#ssn").val();
+            var url = baseurl + '/userdetails/' + $("#uid").val() + '/' + $("#certno").val() + '/' + $("#dob").val() + '/' + $("#tele").val() + '/' + $("#ssn").val();
 
-            var formData = {
-                username: $("#uid").val(),
-                certno: $("#certno").val(),
-                dob: $("#dob").val(),
-                ssn: $("#ssn").val(),
-                //address: $("#addr").val(),
-                telephone: $("#tele").val()
-            };
+            var responseData = '{';
+            responseData += '"username": "' + $("#uid").val() + '",';
+            responseData += '"certno": "' + $("#certno").val() + '",';
+            responseData += '"dob": "' + $("#dob").val() + '",';
+            responseData += '"ssn": "' + $("#ssn").val() + '",';
+            //address: $("#addr").val(),
+            responseData += '"telephone": "' + $("#tele").val() + '"';
+            responseData += '}';
 
-            console.log('submitUserInput->Data:' + formData);
+            // console.log('submitUserInput->Data:' + responseData);
 
             $.post(url,
-                   formData,
                    function (result) {
+                       // alert(result);
+
                        if (result.success) {
-                           console.log('submitUserInput->Result:' + result);
-                           postmessage(formData);
+                           //console.log('submitUserInput->Result:' + result);
+                           postmessage(responseData);
+
+                           //Clear the form contents
+                           $("#authDetails").empty();
                        }
                        else {
                            $('#lblmsg').empty();
@@ -189,7 +194,7 @@
                 <div class="osContentDetailsLeft">
                     <div class="osContentLogoHeader">
                         <img class="osContentLogoHeader-logo" id="benHeader" src="../images/header-logo.jpg" />
-                        <hr class="osContentLogoHeader-hr"></hr>
+                        <hr class="osContentLogoHeader-hr" />
                         <div class="osContentLogoHeader-text">MERCER</div>
                         <div class="osContentLogoHeader-subtext">Artificial Intelligence</div>
                     </div>
@@ -290,3 +295,4 @@
         </footer>
     </div>
 </body>
+</html>

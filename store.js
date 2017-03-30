@@ -18,10 +18,13 @@ module.exports = {
 
         for (var i = 0, l = userdata.users.length; i < l; i++) {
             var obj = userdata.users[i];
+
             if (obj.userid === userid) {
-                return obj;
+                _user = obj;
+                break;
             }
         }
+
         return _user;
     }
 };
