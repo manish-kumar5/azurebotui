@@ -47,11 +47,17 @@ webchatRouter.route('/userdetails/:username/:certno/:dob/:telephone/:ssn')
     var sess = req.session;
     var userid = req.params.username;
 
+    // console.log('user details route');
+
     var isValidSsn = false;
 
     var user = store.validateuseronly(userid);
 
+    // console.log('user->' + user);
+
     if (user) {
+        // console.log('user details route-> Found User');
+
         sess.username = user.name;
 
         if (req.params.ssn) {
@@ -59,16 +65,20 @@ webchatRouter.route('/userdetails/:username/:certno/:dob/:telephone/:ssn')
             isValidSsn = (req.params.ssn === storedSsnLast4Digits);
         }
 
-        if (isValidSsn && user.dob === req.params.dob &&
-            // user.address === req.params.addr &&
-            user.phone === req.params.telephone &&
-            user.certno === req.params.certno)
-            //&& user.ssn === req.params.ssn)
+        //console.log('IsValidSsn->' + isValidSsn);
+        //console.log(req.params.dob + ':' + req.params.telephone + ':' + req.params.certno);
 
+        if (isValidSsn && user.dob === req.params.dob && user.phone === req.params.telephone && user.certno === req.params.certno) {
+            //console.log('user details route - > User found -> Details match');
             res.json({ success: true });
-        //res.json({ success: true, username: sess.username, dob: user.dob, ssn: user.ssn, address: user.address, cert: user.certno, telephone: user.phone })
+        }
+        else {
+            //console.log('user details route - > User found -> Details mismatch');
+            res.json({ success: false });
+        }
     }
     else {
+        //console.log('user details route - > User not found');
         res.json({ success: false });
     }
 });
