@@ -137,7 +137,7 @@
 
             var responseData = '{';
             responseData += '"username": "' + $("#uid").val() + '",';
-            responseData += '"certno": "' + $("#certno").val() + '",';
+            responseData += '"cert": "' + $("#certno").val() + '",';
             responseData += '"dob": "' + $("#dob").val() + '",';
             responseData += '"ssn": "' + $("#ssn").val() + '",';
             //address: $("#addr").val(),
@@ -159,8 +159,9 @@
                            $("#authDetails").empty();
 
                            //Show success message
-                           $("#authDetails").append('<div>Your details have been successfully verified.</div>');
-
+                           $("#authDetails").append('<div>Your details have been successfully verified. Initialization In progress:</div>');
+                           $('#converse').append('<div id="imgprogress"><img src="../images/inprogress.gif" /></div>');
+                           $('#converse').animate({ "scrollTop": $('#converse')[0].scrollHeight }, "fast");
                            var userInfo = JSON.parse(responseData);
 
                            // Populate user details post authentication
