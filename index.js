@@ -57,7 +57,6 @@ webchatRouter.route('/userdetails/:username/:certno/:dob/:telephone/:ssn')
 
     if (user) {
         // console.log('user details route-> Found User');
-
         sess.username = user.name;
 
         if (req.params.ssn) {
@@ -132,8 +131,8 @@ webchatRouter.route('/post/:message')
                     text: message,
                     type: 'message',
                     from: {
-                        id: 'manish_kumar512',
-                        name: 'manish-kumar512'
+                        id: sess.conversation.conversationId,
+                        name: sess.username + '-' + sess.conversation.conversationId
                     }
                 }
             })
