@@ -168,13 +168,14 @@ function printMessages(activities, message, res) {
         // ignore own messages
         activities = activities.filter(function (m) { return m.from.id !== directLineClientName });
         //console.log(activities);
-        var response = "";
+        
         //console.log("Activities: " + activities.length);
         if (activities.length) {
-
+            var response = "";
             for (var i = 0; i < activities.length; i++) {
-                //curr_msg_id = getMsgId(activities[i].id);
+                //var curr_msg_id = getMsgId(activities[i].id);
                 //if(curr_msg_id > prev_msg_id){
+                //console.log(curr_msg_id);
                 response += printMessage(activities[i], res);
                 //}
             }
@@ -186,9 +187,14 @@ function printMessages(activities, message, res) {
             //   clearInterval(refreshIntervalId);
             //}
         }
-        if ("<p>" + message + "</p>" == response) {
+        //if ("<p>" + message + "</p>" === response) {
             //console.log("this is request message")
-        } else {
+        //} 
+        if(response.indexOf("<p>" + message + "</p>") > -1){
+            //
+        }else {
+            console.log("NEW Resp");
+            console.log(response);
             res.json({ data: response });
         }
     }
