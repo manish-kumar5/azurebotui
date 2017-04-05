@@ -82,6 +82,22 @@ webchatRouter.route('/userdetails/:username/:certno/:dob/:telephone/:ssn')
     }
 });
 
+webchatRouter.route('/paymentdetails/:cardno/:expirymonth/:expiryyear')
+.post(function (req, res) {
+    var sess = req.session;
+
+    var cardNo = req.params.cardNo;
+    var expiryMonth = req.params.expirymonth;
+    var expiryYear = req.params.expiryyear;
+
+    if (cardNo && expiryMonth && expiryYear) {
+        res.json({ success: true });
+    }
+    else {
+        res.json({ success: false });
+    }
+});
+
 webchatRouter.route('/webchat')
 .get(function (req, res) {
     res.sendFile(path + "webchat.html");

@@ -81,19 +81,19 @@
                 $("#chat_window_1").css("display", "block");
                 $("#imgchat").css("display", "none");
             })
-            $('#star-5').click(function(){
+            $('#star-5').click(function () {
                 $('#count').val('5');
             });
-            $('#star-4').click(function(){
+            $('#star-4').click(function () {
                 $('#count').val('4');
             });
-            $('#star-3').click(function(){
+            $('#star-3').click(function () {
                 $('#count').val('3');
             });
-            $('#star-2').click(function(){
+            $('#star-2').click(function () {
                 $('#count').val('2');
             });
-            $('#star-1').click(function(){
+            $('#star-1').click(function () {
                 $('#count').val('1');
             });
             //$('.msg_container_base').scroll($('.msg_container_base')[0].scrollHeight);
@@ -203,6 +203,45 @@
             $("#tele").val('');
             $("#ssn").val('');
         }
+
+        function submitPaymentInput() {
+            var url = baseurl + '/paymentdetails/' + $("#cardnumber").val() + '/' + $("#expirationmonth").val() + '/' + $("#expirationyear").val();
+
+            var responseData = '{';
+            responseData += '"cardnumber": "' + $("#cardnumber").val() + '",';
+            responseData += '"expirymonth": "' + $("#expirationmonth").val() + '",';
+            responseData += '"expiryyear": "' + $("#expirationyear").val() + '",';
+            responseData += '}';
+
+            $.post(url,
+                    responseData,
+                    function (result) {
+
+                        if (result.success) {
+                            postmessage(responseData);
+
+                            //Clear the form contents
+                            $("#paymentDetails").empty();
+
+                            //Show success message
+                            $("#authDetails").append('Thank you. The current amount due for December 1, 2016 is $28.48, do I have your permission to process this one time payment?');
+                            $('#converse').append('<div id="imgprogress"><img src="../images/inprogress.gif" /></div>');
+                            $('#converse').animate({ "scrollTop": $('#converse')[0].scrollHeight }, "fast");
+                        }
+                        else {
+                            $('#lblpaymentmsg').empty();
+                            $('#lblpaymentmsg').append('Invalid payment info');
+                        }
+                    }
+             );
+        }
+
+        function clearPaymentInput() {
+            $("#cardnumber").val('');
+            $("#expirationmonth").val('');
+            $("#expirationyear").val('');
+        }
+
     </script>
 </head>
 <body class="osLogin">
