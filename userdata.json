@@ -1,7 +1,7 @@
 {
     "users": [
         {
-            "userid" : "john",
+            "userid" : "john@mercer.com",
             "password": "john",
             "name": "John",
             "dob":"11-17-1984",
@@ -11,7 +11,7 @@
             "certno": "000017111984"
         },
         {
-            "userid" : "anna",
+            "userid" : "anna@mercer.com",
             "password": "anna",
             "name": "Anna",
             "dob":"12-30-1988",

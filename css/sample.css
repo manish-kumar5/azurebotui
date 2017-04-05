@@ -294,3 +294,10 @@ osChatSection{margin:0;color:#fff;background-color:#191717;overflow-y:scroll;}
 .osContentLogoHeader-customerCard-order-contents-li{margin-top:10px;}
 .osContentLogoFooter{margin-top: 25px;margin-bottom: 35px;text-align: center;font-size: 10px;}
 .osContentLogoHeader-chatbot{position:absolute;right:1%;bottom:8%;cursor:pointer;}
+.change-width{
+    width:25% !important;
+    margin-bottom: 5px !important;
+}
+.set-width{
+    width:25% !important;
+}
