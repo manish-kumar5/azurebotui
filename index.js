@@ -86,7 +86,7 @@ webchatRouter.route('/paymentdetails/:cardno/:expirymonth/:expiryyear')
 .post(function (req, res) {
     var sess = req.session;
 
-    var cardNo = req.params.cardNo;
+    var cardNo = req.params.cardno;
     var expiryMonth = req.params.expirymonth;
     var expiryYear = req.params.expiryyear;
 
