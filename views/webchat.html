@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script>
-
+        var posted_msg = "";
         $(function () { // jQuery DOM ready
             var lightbox = '<div id="lightbox">' +
                                 '<div id="content">' + //insert clicked link's href into img src
@@ -103,15 +103,18 @@
         var baseurl = "http://localhost:5001/bot";
         function postmessage(msg) {
             var url = baseurl + '/post/' + msg;
-
+            posted_msg = msg;
             $.get(url, function (result) {
                 if (result && (result.data != "undefined")) {
+                    var _msg = result.data;
+                    var replace = "";
+                    var _msg = result.data.replace("<p>" + posted_msg + "</p>", replace);
                     //$('#converse').append('<table border="0"><tr><td><img style="height:60px;width:60px;" src="http://mercertestbot.azurewebsites.net/images/chatbot.jpg"/> </td> <td>' + result.data + '</td></tr></table>');
                     var msg = '<div class="row msg_container base_receive">';
                     msg += '            <div class="col-md-2 col-xs-2 avatar">';
                     msg += '                    <img style="height:40px;width:40px;" src="../images/ben.png" class=" img-responsive "/>';
                     msg += '  </div> <div class="col-md-10 col-xs-10"> <div class="messages msg_receive"> <p>';
-                    msg += result.data;
+                    msg += _msg;
                     msg += '</p><time datetime="2009-11-13T20:00">BEN at ';
                     msg += new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds();
                     msg += '</time> </div> </div></div>';
@@ -164,7 +167,6 @@
                    responseData,
                    function (result) {
                        // alert(result);
-
                        if (result.success) {
                            //console.log('submitUserInput->Result:' + result);
                            postmessage(responseData);
@@ -173,7 +175,7 @@
                            $("#authDetails").empty();
 
                            //Show success message
-                           $("#authDetails").append('<div>Your details have been successfully verified. Initialization In progress:</div>');
+                           $("#authDetails").append('<div><p class="set-width">Your details have been successfully verified. Initialization In progress:</p></div>');
                            $('#converse').append('<div id="imgprogress"><img src="../images/inprogress.gif" /></div>');
                            $('#converse').animate({ "scrollTop": $('#converse')[0].scrollHeight }, "fast");
                            var userInfo = JSON.parse(responseData);
@@ -186,8 +188,8 @@
                            $("#_dob").text(userInfo.dob);
                        }
                        else {
-                           $('#lblmsg').empty();
-                           $('#lblmsg').append('Invalid user details');
+                           $('#lblauthmsg').empty();
+                           $('#lblauthmsg').append('Invalid user details');
                        }
                    }
             );

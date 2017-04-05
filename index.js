@@ -170,8 +170,9 @@ function printMessages(activities, message, res) {
         //console.log(activities);
         
         //console.log("Activities: " + activities.length);
+        var response = "";
         if (activities.length) {
-            var response = "";
+            
             for (var i = 0; i < activities.length; i++) {
                 //var curr_msg_id = getMsgId(activities[i].id);
                 //if(curr_msg_id > prev_msg_id){
@@ -187,14 +188,13 @@ function printMessages(activities, message, res) {
             //   clearInterval(refreshIntervalId);
             //}
         }
-        //if ("<p>" + message + "</p>" === response) {
+        if ("<p>" + message + "</p>" == response) {
             //console.log("this is request message")
         //} 
-        if(response.indexOf("<p>" + message + "</p>") > -1){
+        //if(response.indexOf("<p>" + message + "</p>") > -1){
             //
         }else {
-            console.log("NEW Resp");
-            console.log(response);
+            response.replace(message, '');
             res.json({ data: response });
         }
     }
