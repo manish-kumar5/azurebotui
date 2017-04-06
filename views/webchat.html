@@ -9,7 +9,9 @@
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script>
+        var baseurl = "http://localhost:5001/bot";
         var posted_msg = "";
+
         $(function () { // jQuery DOM ready
             var lightbox = '<div id="lightbox">' +
                                 '<div id="content">' + //insert clicked link's href into img src
@@ -98,9 +100,36 @@
             });
             //$('.msg_container_base').scroll($('.msg_container_base')[0].scrollHeight);
 
+            $('#regenerate_user').click(function () {
+                var url = baseurl + '/users';
+
+                $.get(url, function (result) {
+                    // alert(result);
+
+                    if (result && result.users) {
+                        var randomIndex = getRandomInt(0, result.users.length - 1);
+                        var userInfo = result.users[randomIndex];
+
+                        var responseData = '{';
+                        responseData += '"username": "' + userInfo.userid + '",';
+                        responseData += '"cert": "' + userInfo.certno + '",';
+                        responseData += '"dob": "' + userInfo.dob + '",';
+                        responseData += '"ssn": "' + userInfo.ssn + '",';
+                        responseData += '"telephone": "' + userInfo.phone + '"';
+                        responseData += '}';
+
+                        postmessage(responseData);
+                        showUserInfo(JSON.parse(responseData));
+                    }
+                });
+            });
         });
 
-        var baseurl = "http://localhost:5001/bot";
+        // Returns a random integer between min (included) and max (included)
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
         function postmessage(msg) {
             var url = baseurl + '/post/' + msg;
             posted_msg = msg;
@@ -125,13 +154,14 @@
 
                 }
             });
-
         }
+
         function hello(obj) {
             $('#converse').append('<div id="imgprogress"><img src="../images/inprogress.gif" /></div>');
             $('#converse').animate({ "scrollTop": $('#converse')[0].scrollHeight }, "fast");
             postmessage(obj.id);
         }
+
         function getTimeString() {
             var data = [
                 [0, 4, "Good evening!!"],
@@ -178,14 +208,10 @@
                            $("#authDetails").append('<div><p class="set-width">Your details have been successfully verified. Initialization In progress:</p></div>');
                            $('#converse').append('<div id="imgprogress"><img src="../images/inprogress.gif" /></div>');
                            $('#converse').animate({ "scrollTop": $('#converse')[0].scrollHeight }, "fast");
+
                            var userInfo = JSON.parse(responseData);
 
-                           // Populate user details post authentication
-                           $("#_name").text(userInfo.username);
-                           $("#_ssn").text('****' + userInfo.ssn);
-                           $("#_cert").text(userInfo.cert);
-                           $("#_contact").text(userInfo.telephone);
-                           $("#_dob").text(userInfo.dob);
+                           showUserInfo(userInfo);
                        }
                        else {
                            $('#lblauthmsg').empty();
@@ -193,6 +219,27 @@
                        }
                    }
             );
+        }
+
+        function showUserInfo(userInfo) {
+            // Populate user details post authentication
+            $("#_name").text(userInfo.username);
+
+            var maskedSsn = '';
+
+            if (userInfo.ssn) {
+                for (var i = 0; i < (userInfo.ssn.length - 4) ; i++) {
+                    maskedSsn += '*';
+                }
+
+                maskedSsn = (maskedSsn == '' ? '*****' : maskedSsn) + userInfo.ssn.substr(userInfo.ssn.length - 4);
+            }
+
+            //$("#_ssn").text('****' + userInfo.ssn);
+            $("#_ssn").text(maskedSsn);
+            $("#_cert").text(userInfo.cert);
+            $("#_contact").text(userInfo.telephone);
+            $("#_dob").text(userInfo.dob);
         }
 
         function clearUserInput() {
@@ -224,7 +271,7 @@
                             $("#paymentDetails").empty();
 
                             //Show success message
-                            $("#paymentDetails").append('<p>Thank you. The current amount due for December 1, 2016 is $28.48, do I have your permission to process this one time payment?</p>');
+                            $("#paymentDetails").append('<p>Thank you. The current amount due for December 1, 2016 is $28.48.<br>Do I have your permission to process this one time payment?</p>');
                             // $('#converse').append('<div id="imgprogress"><img src="../images/inprogress.gif" /></div>');
                             $('#converse').animate({ "scrollTop": $('#converse')[0].scrollHeight }, "fast");
                         }
@@ -241,7 +288,6 @@
             $("#expirationmonth").val('');
             $("#expirationyear").val('');
         }
-
     </script>
 </head>
 <body class="osLogin">
@@ -281,9 +327,14 @@
                     <div class="osContentLogoHeader-customerCard">
                         <div class="osContentLogoHeader-customerCard-card">
                             <div class="osContentLogoHeader-customerCardLeft">
-                                <img class="osContentLogoHeader-customerCard-id" src="../images/customer-profile.png" /><br> <center><span id="_name">User Name</span></center>
+                                <img class="osContentLogoHeader-customerCard-id" src="../images/customer-profile.png" /><br>
+                                <center>Click <a id="regenerate_user"><b>Regenerate</b></a> to auto generate a user</center>
                             </div>
                             <div class="osContentLogoHeader-customerCardRight">
+                                <div class="osContentLogoHeader-customerCard-card-section">
+                                    <div class="osContentLogoHeader-customerCard-card-header osContentLogoHeader-customerCard-card-name">User: <span id="_name" class="osContentLogoHeader-customerCard-card-value osContentLogoHeader-customerCard-card-name"></span></div>
+                                </div>
+
                                 <div class="osContentLogoHeader-customerCard-card-section">
                                     <div class="osContentLogoHeader-customerCard-card-header osContentLogoHeader-customerCard-card-name">SSN: <span id="_ssn" class="osContentLogoHeader-customerCard-card-value osContentLogoHeader-customerCard-card-name"></span></div>
                                 </div>

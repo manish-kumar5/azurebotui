@@ -26,5 +26,8 @@ module.exports = {
         }
 
         return _user;
+    },
+    getusers: function () {
+        return userdata.users;
     }
 };

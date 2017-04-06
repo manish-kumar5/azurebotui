@@ -27,6 +27,11 @@ app.use(session({
 var webchatRouter = express.Router();
 app.use('/bot', webchatRouter);
 
+webchatRouter.route('/users')
+.get(function (req, res) {
+    res.json({ users: store.getusers() });
+});
+
 webchatRouter.route('/user/:userid/:pwd')
 .post(function (req, res) {
     var sess = req.session;
@@ -184,11 +189,11 @@ function printMessages(activities, message, res) {
         // ignore own messages
         activities = activities.filter(function (m) { return m.from.id !== directLineClientName });
         //console.log(activities);
-        
+
         //console.log("Activities: " + activities.length);
         var response = "";
         if (activities.length) {
-            
+
             for (var i = 0; i < activities.length; i++) {
                 //var curr_msg_id = getMsgId(activities[i].id);
                 //if(curr_msg_id > prev_msg_id){
@@ -206,10 +211,10 @@ function printMessages(activities, message, res) {
         }
         if ("<p>" + message + "</p>" == response) {
             //console.log("this is request message")
-        //} 
-        //if(response.indexOf("<p>" + message + "</p>") > -1){
+            //} 
+            //if(response.indexOf("<p>" + message + "</p>") > -1){
             //
-        }else {
+        } else {
             response.replace(message, '');
             res.json({ data: response });
         }
